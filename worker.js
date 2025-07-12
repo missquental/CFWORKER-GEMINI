@@ -781,7 +781,7 @@ function getHomePage() {
   const postsHtml = posts.map(post => `
     <article class="post-card">
       <h2 class="post-title">
-        <a href="/post/${post.id}">${post.title}</a>
+        <a href="/p/${post.id}">${post.title}</a>
       </h2>
       <div class="post-meta">
         <span>📅 ${post.date}</span>
