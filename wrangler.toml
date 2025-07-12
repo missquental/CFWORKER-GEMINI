@@ -1,0 +1,7 @@
+# Konfigurasi untuk Cloudflare Worker
+name = "blog-worker"
+main = "worker.js"
+compatibility_date = "2023-10-01"
+
+[env.production.vars]
+ENVIRONMENT = "production"
