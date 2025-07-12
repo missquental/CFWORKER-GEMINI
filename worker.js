@@ -29,7 +29,7 @@ const posts = [
 
 // Konfigurasi blog
 const BLOG_CONFIG = {
-  title: "My Blog",
+  title: "Blog Saya",
   subtitle: "Berbagi pemikiran dan pengalaman",
   description: "Blog pribadi yang membahas teknologi, tutorial, dan pengalaman sehari-hari",
   author: "Admin",
@@ -287,11 +287,74 @@ const HTML_TEMPLATE = `
             margin-bottom: 1rem;
         }
         
+        .post-content h1, .post-content h2, .post-content h3 {
+            color: #2d3748;
+            margin: 2rem 0 1rem 0;
+            font-weight: 600;
+        }
+        
+        .post-content h1 {
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+        
+        .post-content h2 {
+            font-size: 1.5rem;
+            border-left: 4px solid #667eea;
+            padding-left: 1rem;
+        }
+        
+        .post-content h3 {
+            font-size: 1.3rem;
+            color: #667eea;
+        }
+        
+        /* Styling untuk heading dengan format **Text:** */
+        .post-content .section-heading {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 2rem 0 1rem 0;
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            position: relative;
+            display: block;
+        }
+        
+        .post-content .section-heading::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px 0 0 4px;
+        }
+        
+        .post-content strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+        
+        .post-content p {
+            margin-bottom: 1.2rem;
+            text-align: justify;
+        }
+        
         .post-content img {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .read-more {
@@ -745,7 +808,7 @@ function getHomePage() {
     </div>
   `;
 
-  return HTML_TEMPLATE
+        <div class="post-content">${processedContent}</div>
     .replace('{{title}}', `${BLOG_CONFIG.title} - ${BLOG_CONFIG.subtitle}`)
     .replace('{{description}}', BLOG_CONFIG.description)
     .replace('{{url}}', 'https://yourdomain.workers.dev')
@@ -773,6 +836,29 @@ function getPostPage(postId) {
       .replace('{{content}}', content);
   }
 
+  // Process content to convert **Heading:** format to proper HTML
+  let processedContent = post.content;
+  
+  // Convert **Text:** to section headings
+  processedContent = processedContent.replace(
+    /\*\*([^*]+):\*\*/g, 
+    '<div class="section-heading">$1</div>'
+  );
+  
+  // Convert remaining **text** to strong
+  processedContent = processedContent.replace(
+    /\*\*([^*]+)\*\*/g, 
+    '<strong>$1</strong>'
+  );
+  
+  // Convert line breaks to proper paragraphs
+  processedContent = processedContent.replace(/\n\n/g, '</p><p>');
+  processedContent = '<p>' + processedContent + '</p>';
+  
+  // Clean up empty paragraphs
+  processedContent = processedContent.replace(/<p><\/p>/g, '');
+  processedContent = processedContent.replace(/<p>\s*<div/g, '<div');
+  processedContent = processedContent.replace(/<\/div>\s*<\/p>/g, '</div>');
   const content = `
     <article class="post-card">
       <h1 class="post-title">${post.title}</h1>
